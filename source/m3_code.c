@@ -11,95 +11,94 @@
 //---------------------------------------------------------------------------------------------------------------------------------
 
 
-IM3CodePage  NewCodePage  (IM3Runtime i_runtime, u32 i_minNumLines)
-{
-    IM3CodePage page;
+IM3CodePage NewCodePage(IM3Runtime i_runtime, u32 i_minNumLines) {
+  IM3CodePage page;
 
-    u32 pageSize = sizeof (M3CodePageHeader) + sizeof (code_t) * i_minNumLines;
+  u32 pageSize = sizeof(M3CodePageHeader) + sizeof(code_t) * i_minNumLines;
 
-    pageSize = (pageSize + (d_m3CodePageAlignSize-1)) & ~(d_m3CodePageAlignSize-1); // align
-    page = (IM3CodePage)m3_Malloc ("M3CodePage", pageSize);
+  pageSize = (pageSize + (d_m3CodePageAlignSize - 1)) & ~(d_m3CodePageAlignSize - 1); // align
+  page = (IM3CodePage) m3_Malloc ("M3CodePage", pageSize);
 
-    if (page)
-    {
-        page->info.sequence = ++i_runtime->newCodePageSequence;
-        page->info.numLines = (pageSize - sizeof (M3CodePageHeader)) / sizeof (code_t);
+  if (page) {
+    page->info.sequence = ++i_runtime->newCodePageSequence;
+    page->info.numLines = (pageSize - sizeof(M3CodePageHeader)) / sizeof(code_t);
 
 #if d_m3RecordBacktraces
-        u32 pageSizeBt = sizeof (M3CodeMappingPage) + sizeof (M3CodeMapEntry) * page->info.numLines;
-        page->info.mapping = (M3CodeMappingPage *)m3_Malloc ("M3CodeMappingPage", pageSizeBt);
+    u32 pageSizeBt = sizeof (M3CodeMappingPage) + sizeof (M3CodeMapEntry) * page->info.numLines;
+    page->info.mapping = (M3CodeMappingPage *)m3_Malloc ("M3CodeMappingPage", pageSizeBt);
 
-        if (page->info.mapping)
-        {
-            page->info.mapping->size = 0;
-            page->info.mapping->capacity = page->info.numLines;
-        }
-        else
-        {
-            m3_Free (page);
-            return NULL;
-        }
-        page->info.mapping->basePC = GetPageStartPC(page);
-#endif // d_m3RecordBacktraces
-
-        m3log (runtime, "new page: %p; seq: %d; bytes: %d; lines: %d", GetPagePC (page), page->info.sequence, pageSize, page->info.numLines);
+    if (page->info.mapping)
+    {
+        page->info.mapping->size = 0;
+        page->info.mapping->capacity = page->info.numLines;
     }
-
-    return page;
-}
-
-
-void  FreeCodePages  (IM3CodePage * io_list)
-{
-    IM3CodePage page = * io_list;
-
-    while (page)
+    else
     {
-        m3log (code, "free page: %d; %p; util: %3.1f%%", page->info.sequence, page, 100. * page->info.lineIndex / page->info.numLines);
-
-        IM3CodePage next = page->info.next;
-#if d_m3RecordBacktraces
-        m3_Free (page->info.mapping);
-#endif // d_m3RecordBacktraces
         m3_Free (page);
-        page = next;
+        return NULL;
     }
+    page->info.mapping->basePC = GetPageStartPC(page);
+#endif // d_m3RecordBacktraces
 
-    * io_list = NULL;
+    m3log (runtime,
+           "new page: %p; seq: %d; bytes: %d; lines: %d",
+           GetPagePC(page),
+           page->info.sequence,
+           pageSize,
+           page->info.numLines);
+  }
+
+  return page;
 }
 
+void FreeCodePages(IM3CodePage *io_list) {
+  IM3CodePage page = *io_list;
 
-u32  NumFreeLines  (IM3CodePage i_page)
-{
-    d_m3Assert (i_page->info.lineIndex <= i_page->info.numLines);
+  while (page) {
+    m3log (code,
+           "free page: %d; %p; util: %3.1f%%",
+           page->info.sequence,
+           page,
+           100. * page->info.lineIndex / page->info.numLines);
 
-    return i_page->info.numLines - i_page->info.lineIndex;
+    IM3CodePage next = page->info.next;
+#if d_m3RecordBacktraces
+    m3_Free (page->info.mapping);
+#endif // d_m3RecordBacktraces
+    m3_Free (page);
+    page = next;
+  }
+
+  *io_list = NULL;
 }
 
+u32 NumFreeLines(IM3CodePage i_page) {
+  d_m3Assert (i_page->info.lineIndex <= i_page->info.numLines);
 
-void  EmitWord_impl  (IM3CodePage i_page, void * i_word)
-{                                                                       d_m3Assert (i_page->info.lineIndex+1 <= i_page->info.numLines);
-    i_page->code [i_page->info.lineIndex++] = i_word;
+  return i_page->info.numLines - i_page->info.lineIndex;
 }
 
-void  EmitWord32  (IM3CodePage i_page, const u32 i_word)
-{                                                                       d_m3Assert (i_page->info.lineIndex+1 <= i_page->info.numLines);
-    * ((u32 *) & i_page->code [i_page->info.lineIndex++]) = i_word;
+void EmitWord_impl(IM3CodePage i_page, void *i_word) {
+  d_m3Assert (i_page->info.lineIndex + 1 <= i_page->info.numLines);
+  i_page->code[i_page->info.lineIndex++] = i_word;
 }
 
-void  EmitWord64  (IM3CodePage i_page, const u64 i_word)
-{
+void EmitWord32(IM3CodePage i_page, const u32 i_word) {
+  d_m3Assert (i_page->info.lineIndex + 1 <= i_page->info.numLines);
+  *((u32 *) &i_page->code[i_page->info.lineIndex++]) = i_word;
+}
+
+void EmitWord64(IM3CodePage i_page, const u64 i_word) {
 #if M3_SIZEOF_PTR == 4
-                                                                        d_m3Assert (i_page->info.lineIndex+2 <= i_page->info.numLines);
-    * ((u64 *) & i_page->code [i_page->info.lineIndex]) = i_word;
-    i_page->info.lineIndex += 2;
+  d_m3Assert (i_page->info.lineIndex+2 <= i_page->info.numLines);
+* ((u64 *) & i_page->code [i_page->info.lineIndex]) = i_word;
+i_page->info.lineIndex += 2;
 #else
-                                                                        d_m3Assert (i_page->info.lineIndex+1 <= i_page->info.numLines);
-    * ((u64 *) & i_page->code [i_page->info.lineIndex]) = i_word;
-    i_page->info.lineIndex += 1;
+  d_m3Assert (i_page->info.lineIndex + 1 <= i_page->info.numLines);
+  *((u64 *) &i_page->code[i_page->info.lineIndex]) = i_word;
+  i_page->info.lineIndex += 1;
 #endif
 }
-
 
 #if d_m3RecordBacktraces
 void  EmitMappingEntry  (IM3CodePage i_page, u32 i_moduleOffset)
@@ -115,69 +114,54 @@ void  EmitMappingEntry  (IM3CodePage i_page, u32 i_moduleOffset)
 }
 #endif // d_m3RecordBacktraces
 
-pc_t  GetPageStartPC  (IM3CodePage i_page)
-{
-    return & i_page->code [0];
+pc_t GetPageStartPC(IM3CodePage i_page) {
+  return &i_page->code[0];
 }
 
-
-pc_t  GetPagePC  (IM3CodePage i_page)
-{
-    if (i_page)
-        return & i_page->code [i_page->info.lineIndex];
-    else
-        return NULL;
+pc_t GetPagePC(IM3CodePage i_page) {
+  if (i_page)
+    return &i_page->code[i_page->info.lineIndex];
+  else
+    return NULL;
 }
 
-
-void  PushCodePage  (IM3CodePage * i_list, IM3CodePage i_codePage)
-{
-    IM3CodePage next = * i_list;
-    i_codePage->info.next = next;
-    * i_list = i_codePage;
+void PushCodePage(IM3CodePage *i_list, IM3CodePage i_codePage) {
+  IM3CodePage next = *i_list;
+  i_codePage->info.next = next;
+  *i_list = i_codePage;
 }
 
+IM3CodePage PopCodePage(IM3CodePage *i_list) {
+  IM3CodePage page = *i_list;
+  *i_list = page->info.next;
+  page->info.next = NULL;
 
-IM3CodePage  PopCodePage  (IM3CodePage * i_list)
-{
-    IM3CodePage page = * i_list;
-    * i_list = page->info.next;
-    page->info.next = NULL;
-
-    return page;
+  return page;
 }
 
+u32 FindCodePageEnd(IM3CodePage i_list, IM3CodePage *o_end) {
+  u32 numPages = 0;
+  *o_end = NULL;
 
+  while (i_list) {
+    *o_end = i_list;
+    ++numPages;
+    i_list = i_list->info.next;
+  }
 
-u32  FindCodePageEnd  (IM3CodePage i_list, IM3CodePage * o_end)
-{
-    u32 numPages = 0;
-    * o_end = NULL;
-
-    while (i_list)
-    {
-        * o_end = i_list;
-        ++numPages;
-        i_list = i_list->info.next;
-    }
-
-    return numPages;
+  return numPages;
 }
 
-
-u32  CountCodePages  (IM3CodePage i_list)
-{
-    IM3CodePage unused;
-    return FindCodePageEnd (i_list, & unused);
+u32 CountCodePages(IM3CodePage i_list) {
+  IM3CodePage unused;
+  return FindCodePageEnd(i_list, &unused);
 }
 
+IM3CodePage GetEndCodePage(IM3CodePage i_list) {
+  IM3CodePage end;
+  FindCodePageEnd(i_list, &end);
 
-IM3CodePage GetEndCodePage  (IM3CodePage i_list)
-{
-    IM3CodePage end;
-    FindCodePageEnd (i_list, & end);
-
-    return end;
+  return end;
 }
 
 #if d_m3RecordBacktraces

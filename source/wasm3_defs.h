@@ -11,8 +11,8 @@
 #define M3_STR__(x) #x
 #define M3_STR(x)   M3_STR__(x)
 
-#define M3_CONCAT__(a,b) a##b
-#define M3_CONCAT(a,b)   M3_CONCAT__(a,b)
+#define M3_CONCAT__(a, b) a##b
+#define M3_CONCAT(a, b)   M3_CONCAT__(a,b)
 
 /*
  * Detect compiler
@@ -242,28 +242,28 @@
 #   define m3_bswap64(x)     __bswap_64((x))
 #  else
 #   warning "Using naive (probably slow) bswap operations"
-    static inline
-    uint16_t m3_bswap16(uint16_t x) {
-      return ((( x  >> 8 ) & 0xffu ) | (( x  & 0xffu ) << 8 ));
-    }
-    static inline
-    uint32_t m3_bswap32(uint32_t x) {
-      return ((( x & 0xff000000u ) >> 24 ) |
-              (( x & 0x00ff0000u ) >> 8  ) |
-              (( x & 0x0000ff00u ) << 8  ) |
-              (( x & 0x000000ffu ) << 24 ));
-    }
-    static inline
-    uint64_t m3_bswap64(uint64_t x) {
-      return ((( x & 0xff00000000000000ull ) >> 56 ) |
-              (( x & 0x00ff000000000000ull ) >> 40 ) |
-              (( x & 0x0000ff0000000000ull ) >> 24 ) |
-              (( x & 0x000000ff00000000ull ) >> 8  ) |
-              (( x & 0x00000000ff000000ull ) << 8  ) |
-              (( x & 0x0000000000ff0000ull ) << 24 ) |
-              (( x & 0x000000000000ff00ull ) << 40 ) |
-              (( x & 0x00000000000000ffull ) << 56 ));
-    }
+static inline
+uint16_t m3_bswap16(uint16_t x) {
+  return (((x >> 8) & 0xffu) | ((x & 0xffu) << 8));
+}
+static inline
+uint32_t m3_bswap32(uint32_t x) {
+  return (((x & 0xff000000u) >> 24) |
+      ((x & 0x00ff0000u) >> 8) |
+      ((x & 0x0000ff00u) << 8) |
+      ((x & 0x000000ffu) << 24));
+}
+static inline
+uint64_t m3_bswap64(uint64_t x) {
+  return (((x & 0xff00000000000000ull) >> 56) |
+      ((x & 0x00ff000000000000ull) >> 40) |
+      ((x & 0x0000ff0000000000ull) >> 24) |
+      ((x & 0x000000ff00000000ull) >> 8) |
+      ((x & 0x00000000ff000000ull) << 8) |
+      ((x & 0x0000000000ff0000ull) << 24) |
+      ((x & 0x000000000000ff00ull) << 40) |
+      ((x & 0x00000000000000ffull) << 56));
+}
 #  endif
 # endif
 

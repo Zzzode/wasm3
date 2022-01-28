@@ -42,15 +42,14 @@ sys.path.append(os.path.join(scriptDir, '..', 'extra'))
 from testutils import *
 from pprint import pprint
 
-
 #
 # Args handling
 #
 
 parser = argparse.ArgumentParser()
 parser.add_argument("--exec", metavar="<interpreter>", default="../build/wasm3 --repl")
-parser.add_argument("--spec",                          default="opam-1.1.1")
-parser.add_argument("--timeout", type=int,             default=30)
+parser.add_argument("--spec", default="opam-1.1.1")
+parser.add_argument("--timeout", type=int, default=30)
 parser.add_argument("--line", metavar="<source line>", type=int)
 parser.add_argument("--all", action="store_true")
 parser.add_argument("--show-logs", action="store_true")
@@ -68,8 +67,9 @@ if args.line:
 # Utilities
 #
 
-log = open("spec-test.log","w+")
+log = open("spec-test.log", "w+")
 log.write("======================\n")
+
 
 def warning(msg, force=False):
     log.write("Warning: " + msg + "\n")
@@ -77,15 +77,18 @@ def warning(msg, force=False):
     if args.verbose or force:
         print(f"{ansi.WARNING}Warning:{ansi.ENDC} {msg}")
 
+
 def fatal(msg):
     log.write("Fatal: " + msg + "\n")
     log.flush()
     print(f"{ansi.FAIL}Fatal:{ansi.ENDC} {msg}")
     sys.exit(1)
-    
+
+
 def safe_fn(fn):
-    keepcharacters = (' ','.','_','-')
+    keepcharacters = (' ', '.', '_', '-')
     return "".join(c for c in fn if c.isalnum() or c in keepcharacters).strip()
+
 
 def binaryToFloat(num, t):
     if t == "f32":
@@ -94,6 +97,7 @@ def binaryToFloat(num, t):
         return struct.unpack('!d', struct.pack('!Q', int(num)))[0]
     else:
         fatal(f"Unknown type '{t}'")
+
 
 def escape_str(s):
     if s == "":
@@ -104,6 +108,7 @@ def escape_str(s):
 
     return '\\x' + '\\x'.join('{0:02x}'.format(x) for x in s.encode('utf-8'))
 
+
 #
 # Value format options
 #
@@ -111,13 +116,15 @@ def escape_str(s):
 def formatValueRaw(num, t):
     return str(num)
 
+
 def formatValueHex(num, t):
     if t == "f32" or t == "i32":
-        return "{0:#0{1}x}".format(int(num), 8+2)
+        return "{0:#0{1}x}".format(int(num), 8 + 2)
     elif t == "f64" or t == "i64":
-        return "{0:#0{1}x}".format(int(num), 16+2)
+        return "{0:#0{1}x}".format(int(num), 16 + 2)
     else:
         return str(num)
+
 
 def formatValueFloat(num, t):
     if t == "f32":
@@ -130,14 +137,15 @@ def formatValueFloat(num, t):
     result = "{0:.{1}f}".format(binaryToFloat(num, t), s).rstrip('0')
     if result.endswith('.'):
         result = result + '0'
-    if len(result) > s*2:
+    if len(result) > s * 2:
         result = "{0:.{1}e}".format(binaryToFloat(num, t), s)
     return result
+
 
 formaters = {
     'raw': formatValueRaw,
     'hex': formatValueHex,
-    'fp':  formatValueFloat,
+    'fp': formatValueFloat,
 }
 formatValue = formaters[args.format]
 
@@ -164,7 +172,7 @@ if not (os.path.isdir(spec_dir)):
             if re.match(r".*-.*/.*/.*(\.wasm|\.json)", zipInfo.filename):
                 parts = pathlib.Path(zipInfo.filename).parts
                 newpath = str(pathlib.Path(*parts[1:-1]))
-                newfn   = str(pathlib.Path(*parts[-1:]))
+                newfn = str(pathlib.Path(*parts[-1:]))
                 ensure_path(os.path.join(spec_dir, newpath))
                 newpath = os.path.join(spec_dir, newpath, newfn)
                 zipInfo.filename = newpath
@@ -179,6 +187,7 @@ from threading import Thread
 from queue import Queue, Empty
 
 import shlex
+
 
 class Wasm3():
     def __init__(self, exe):
@@ -196,7 +205,7 @@ class Wasm3():
 
         cmd = shlex.split(self.exe)
 
-        #print(f"wasm3: Starting {' '.join(cmd)}")
+        # print(f"wasm3: Starting {' '.join(cmd)}")
 
         self.q = Queue()
         self.p = Popen(cmd, bufsize=0, stdin=PIPE, stdout=PIPE, stderr=STDOUT)
@@ -238,7 +247,7 @@ class Wasm3():
 
     def load(self, fn):
         self.loaded = None
-        with open(fn,"rb") as f:
+        with open(fn, "rb") as f:
             wasm = f.read()
         res = self._run_cmd(f":load-hex {len(wasm)}\n{wasm.hex()}\n")
         self.loaded = fn
@@ -252,7 +261,7 @@ class Wasm3():
             self.restart()
         self._flush_input()
 
-        #print(f"wasm3: {cmd.strip()}")
+        # print(f"wasm3: {cmd.strip()}")
         self._write(cmd)
         return self._read_until("wasm3> ")
 
@@ -296,6 +305,7 @@ class Wasm3():
         self.p.wait(timeout=1.0)
         self.p = None
 
+
 #
 # Multi-value result handling
 #
@@ -303,9 +313,10 @@ class Wasm3():
 def parseResults(s):
     values = s.split(", ")
     values = [x.split(":") for x in values]
-    values = [{ "type": x[1], "value": int(x[0]) } for x in values]
+    values = [{"type": x[1], "value": int(x[0])} for x in values]
 
     return normalizeResults(values)
+
 
 def normalizeResults(values):
     for x in values:
@@ -320,9 +331,11 @@ def normalizeResults(values):
             x["value"] = formatValue(v, t)
     return values
 
+
 def combineResults(values):
-    values = [x["value"]+":"+x["type"] for x in values]
+    values = [x["value"] + ":" + x["type"] for x in values]
     return ", ".join(values)
+
 
 #
 # Actual test
@@ -334,37 +347,38 @@ wasm3_ver = wasm3.version()
 print(wasm3_ver)
 
 blacklist = Blacklist([
-  "float_exprs.wast:* f32.nonarithmetic_nan_bitpattern*",
-  "imports.wast:*",
-  "names.wast:* *.wasm \\x00*", # names that start with '\0'
+    "float_exprs.wast:* f32.nonarithmetic_nan_bitpattern*",
+    "imports.wast:*",
+    "names.wast:* *.wasm \\x00*",  # names that start with '\0'
 ])
 
 if wasm3_ver in Blacklist(["* on i386* MSVC *", "* on i386* Clang * for Windows"]):
     warning("Win32 x86 has i64->f32 conversion precision issues, skipping some tests", True)
     # See: https://docs.microsoft.com/en-us/cpp/c-runtime-library/floating-point-support
     blacklist.add([
-      "conversions.wast:* f32.convert_i64_u(9007199791611905)",
-      "conversions.wast:* f32.convert_i64_u(9223371761976868863)",
-      "conversions.wast:* f32.convert_i64_u(9223372586610589697)",
+        "conversions.wast:* f32.convert_i64_u(9007199791611905)",
+        "conversions.wast:* f32.convert_i64_u(9223371761976868863)",
+        "conversions.wast:* f32.convert_i64_u(9223372586610589697)",
     ])
 elif wasm3_ver in Blacklist(["* on mips* GCC *"]):
     warning("MIPS has NaN representation issues, skipping some tests", True)
     blacklist.add([
-      "float_exprs.wast:* *_nan_bitpattern(*",
-      "float_exprs.wast:* *no_fold_*",
+        "float_exprs.wast:* *_nan_bitpattern(*",
+        "float_exprs.wast:* *no_fold_*",
     ])
 elif wasm3_ver in Blacklist(["* on sparc* GCC *"]):
     warning("SPARC has NaN representation issues, skipping some tests", True)
     blacklist.add([
-      "float_exprs.wast:* *.canonical_nan_bitpattern(0, 0)",
+        "float_exprs.wast:* *.canonical_nan_bitpattern(0, 0)",
     ])
 
-stats = dotdict(total_run=0, skipped=0, failed=0, crashed=0, timeout=0,  success=0, missing=0)
+stats = dotdict(total_run=0, skipped=0, failed=0, crashed=0, timeout=0, success=0, missing=0)
 
 # Convert some trap names from the original spec
 trapmap = {
-  "unreachable": "unreachable executed"
+    "unreachable": "unreachable executed"
 }
+
 
 def runInvoke(test):
     test.cmd = [test.action.field]
@@ -468,12 +482,13 @@ def runInvoke(test):
             return
 
         showTestResult()
-        #sys.exit(1)
+        # sys.exit(1)
+
 
 if args.file:
     jsonFiles = args.file
 else:
-    jsonFiles  = glob.glob(os.path.join(spec_dir, "core", "*.json"))
+    jsonFiles = glob.glob(os.path.join(spec_dir, "core", "*.json"))
     jsonFiles += glob.glob(os.path.join(spec_dir, "proposals", "sign-extension-ops", "*.json"))
     jsonFiles += glob.glob(os.path.join(spec_dir, "proposals", "nontrapping-float-to-int-conversions", "*.json"))
 
@@ -511,14 +526,14 @@ for fn in jsonFiles:
                 if res:
                     warning(res)
             except Exception as e:
-                pass #fatal(str(e))
+                pass  # fatal(str(e))
 
-        elif (  test.type == "action" or
-                test.type == "assert_return" or
-                test.type == "assert_trap" or
-                test.type == "assert_exhaustion" or
-                test.type == "assert_return_canonical_nan" or
-                test.type == "assert_return_arithmetic_nan"):
+        elif (test.type == "action" or
+              test.type == "assert_return" or
+              test.type == "assert_trap" or
+              test.type == "assert_exhaustion" or
+              test.type == "assert_return_canonical_nan" or
+              test.type == "assert_return_arithmetic_nan"):
 
             if args.line and test.line != args.line:
                 continue
@@ -576,7 +591,7 @@ if (stats.failed + stats.success) != stats.total_run:
 pprint(stats)
 
 if stats.failed > 0:
-    failed = (stats.failed*100)/stats.total_run
+    failed = (stats.failed * 100) / stats.total_run
     print(f"{ansi.FAIL}=======================")
     print(f" FAILED: {failed:.2f}%")
     if stats.crashed > 0:
@@ -590,8 +605,7 @@ elif stats.success > 0:
     if stats.skipped > 0:
         print(f"{ansi.WARNING} ({stats.skipped} tests skipped){ansi.OKGREEN}")
     print(f"======================={ansi.ENDC}")
-    
+
 elif stats.total_run == 0:
     print("Error: No tests run")
     sys.exit(1)
-

@@ -1,7 +1,7 @@
 # Wasm3 development notes
 
-This project uses CMake.
-General build steps look like:
+This project uses CMake. General build steps look like:
+
 ```sh
 mkdir -p build
 cd build
@@ -9,8 +9,8 @@ cmake ..
 make -j8
 ```
 
-Wasm3 is continuously tested with Clang, GCC, MSVC compilers, and on multiple platforms.
-It can be easily integrated into any build system, as shown in `platforms`.
+Wasm3 is continuously tested with Clang, GCC, MSVC compilers, and on multiple platforms. It can be easily integrated
+into any build system, as shown in `platforms`.
 
 ## Build on Linux, OS X
 
@@ -35,12 +35,14 @@ ninja
 ## Build on Windows
 
 Prerequisites:
+
 - [Build Tools for Visual Studio 2019](https://visualstudio.microsoft.com/downloads/#build-tools-for-visual-studio-2019)
 - [CMake](https://cmake.org/download/)
 - [Ninja](https://github.com/ninja-build/ninja/releases)
 - [Clang 9](https://releases.llvm.org/download.html#9.0.0)
 
 Recommended tools:
+
 - [Cmder](https://cmder.net/)
 - [Python3](https://www.python.org/downloads/)
 - [ptime](http://www.pc-tools.net/win32/ptime/)
@@ -95,23 +97,27 @@ ninja
 This can be useful for cross-compilation, quick builds or when a build system (CMake, Ninja, etc.) is not available.
 
 ### gcc/clang
+
 ```sh
 gcc -O3 -g0 -s -Isource -Dd_m3HasWASI source/*.c platforms/app/main.c -lm -o wasm3
 ```
 
 ### msvc/clang-cl
+
 ```sh
 cl source/*.c platforms/app/main.c /Isource /MD /Ox /Oy /Gw /GS- /W0 /Dd_m3HasWASI /Fewasm3.exe /link advapi32.lib
 ```
 
 ### mingw-w64
+
 ```sh
 x86_64-w64-mingw32-gcc -O3 -g0 -s -Isource -Dd_m3HasWASI source/*.c platforms/app/main.c -lm -lpthread -static -o wasm3.exe
 ```
 
 ## Build for microcontrollers
 
-In `./platforms/` folder you can find projects for different targets. Some of them are using Platformio, so you can follow the regular pio build process. Others have custom instructions in respective `README.md` files.
+In `./platforms/` folder you can find projects for different targets. Some of them are using Platformio, so you can
+follow the regular pio build process. Others have custom instructions in respective `README.md` files.
 
 ## Build with WasiEnv
 
@@ -161,8 +167,7 @@ zig build
 
 This will install `wasm3` compiled for your target architecture in `zig-out/bin/wasm3`.
 
-In order to build `wasm3` in a mode different than Debug, e.g., in ReleaseFast, pass in
-an appropriate flag like so:
+In order to build `wasm3` in a mode different than Debug, e.g., in ReleaseFast, pass in an appropriate flag like so:
 
 ```sh
 zig build -Drelease-fast

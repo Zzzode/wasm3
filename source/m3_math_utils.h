@@ -81,7 +81,7 @@ int __builtin_clzll(uint64_t value) {
 
 // TODO: not sure why, signbit is actually defined in math.h
 #if (defined(ESP8266) || defined(ESP32)) && !defined(signbit)
-    #define signbit(__x) \
+#define signbit(__x) \
             ((sizeof(__x) == sizeof(float))  ?  __signbitf(__x) : __signbitd(__x))
 #endif
 
@@ -123,30 +123,30 @@ uint64_t strtoull(const char* str, char** endptr, int base) {
 
 static inline
 u32 rotl32(u32 n, unsigned c) {
-    const unsigned mask = CHAR_BIT * sizeof(n) - 1;
-    c &= mask & 31;
-    return (n << c) | (n >> ((-c) & mask));
+  const unsigned mask = CHAR_BIT * sizeof(n) - 1;
+  c &= mask & 31;
+  return (n << c) | (n >> ((-c) & mask));
 }
 
 static inline
 u32 rotr32(u32 n, unsigned c) {
-    const unsigned mask = CHAR_BIT * sizeof(n) - 1;
-    c &= mask & 31;
-    return (n >> c) | (n << ((-c) & mask));
+  const unsigned mask = CHAR_BIT * sizeof(n) - 1;
+  c &= mask & 31;
+  return (n >> c) | (n << ((-c) & mask));
 }
 
 static inline
 u64 rotl64(u64 n, unsigned c) {
-    const unsigned mask = CHAR_BIT * sizeof(n) - 1;
-    c &= mask & 63;
-    return (n << c) | (n >> ((-c) & mask));
+  const unsigned mask = CHAR_BIT * sizeof(n) - 1;
+  c &= mask & 63;
+  return (n << c) | (n >> ((-c) & mask));
 }
 
 static inline
 u64 rotr64(u64 n, unsigned c) {
-    const unsigned mask = CHAR_BIT * sizeof(n) - 1;
-    c &= mask & 63;
-    return (n >> c) | (n << ((-c) & mask));
+  const unsigned mask = CHAR_BIT * sizeof(n) - 1;
+  c &= mask & 63;
+  return (n >> c) | (n << ((-c) & mask));
 }
 
 /*
@@ -164,22 +164,22 @@ u64 rotr64(u64 n, unsigned c) {
 // 2's complement detection
 #if (INT_MIN != -INT_MAX)
 
-    #define OP_DIV_S(RES, A, B, TYPE_MIN)                         \
+#define OP_DIV_S(RES, A, B, TYPE_MIN)                         \
         if (M3_UNLIKELY(B == 0)) newTrap (m3Err_trapDivisionByZero); \
         if (M3_UNLIKELY(B == -1 and A == TYPE_MIN)) {                \
             newTrap (m3Err_trapIntegerOverflow);                  \
         }                                                         \
         RES = A / B;
 
-    #define OP_REM_S(RES, A, B, TYPE_MIN)                         \
+#define OP_REM_S(RES, A, B, TYPE_MIN)                         \
         if (M3_UNLIKELY(B == 0)) newTrap (m3Err_trapDivisionByZero); \
         if (M3_UNLIKELY(B == -1 and A == TYPE_MIN)) RES = 0;         \
         else RES = A % B;
 
 #else
 
-    #define OP_DIV_S(RES, A, B, TYPE_MIN) OP_DIV_U(RES, A, B)
-    #define OP_REM_S(RES, A, B, TYPE_MIN) OP_REM_U(RES, A, B)
+#define OP_DIV_S(RES, A, B, TYPE_MIN) OP_DIV_U(RES, A, B)
+#define OP_REM_S(RES, A, B, TYPE_MIN) OP_REM_U(RES, A, B)
 
 #endif
 
@@ -195,7 +195,6 @@ u64 rotr64(u64 n, unsigned c) {
         newTrap (m3Err_trapIntegerOverflow);                \
     }                                                       \
     RES = (TYPE)A;
-
 
 #define OP_I32_TRUNC_F32(RES, A)    OP_TRUNC(RES, A, i32, -2147483904.0f, 2147483648.0f)
 #define OP_U32_TRUNC_F32(RES, A)    OP_TRUNC(RES, A, u32,          -1.0f, 4294967296.0f)
@@ -238,30 +237,30 @@ u64 rotr64(u64 n, unsigned c) {
 
 static inline
 f32 min_f32(f32 a, f32 b) {
-    if (M3_UNLIKELY(isnan(a) or isnan(b))) return NAN;
-    if (M3_UNLIKELY(a == 0 and a == b)) return signbit(a) ? a : b;
-    return a > b ? b : a;
+  if (M3_UNLIKELY(isnan(a) or isnan(b))) return NAN;
+  if (M3_UNLIKELY(a == 0 and a == b)) return signbit(a) ? a : b;
+  return a > b ? b : a;
 }
 
 static inline
 f32 max_f32(f32 a, f32 b) {
-    if (M3_UNLIKELY(isnan(a) or isnan(b))) return NAN;
-    if (M3_UNLIKELY(a == 0 and a == b)) return signbit(a) ? b : a;
-    return a > b ? a : b;
+  if (M3_UNLIKELY(isnan(a) or isnan(b))) return NAN;
+  if (M3_UNLIKELY(a == 0 and a == b)) return signbit(a) ? b : a;
+  return a > b ? a : b;
 }
 
 static inline
 f64 min_f64(f64 a, f64 b) {
-    if (M3_UNLIKELY(isnan(a) or isnan(b))) return NAN;
-    if (M3_UNLIKELY(a == 0 and a == b)) return signbit(a) ? a : b;
-    return a > b ? b : a;
+  if (M3_UNLIKELY(isnan(a) or isnan(b))) return NAN;
+  if (M3_UNLIKELY(a == 0 and a == b)) return signbit(a) ? a : b;
+  return a > b ? b : a;
 }
 
 static inline
 f64 max_f64(f64 a, f64 b) {
-    if (M3_UNLIKELY(isnan(a) or isnan(b))) return NAN;
-    if (M3_UNLIKELY(a == 0 and a == b)) return signbit(a) ? b : a;
-    return a > b ? a : b;
+  if (M3_UNLIKELY(isnan(a) or isnan(b))) return NAN;
+  if (M3_UNLIKELY(a == 0 and a == b)) return signbit(a) ? b : a;
+  return a > b ? a : b;
 }
 #endif
 

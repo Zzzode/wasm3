@@ -5,7 +5,7 @@ It's packaged into a `WebAssembly` package, so you can finally run `WebAssembly`
 
 ## Running on WebAssembly.sh
 
-Open [**WebAssembly.sh**](https://webassembly.sh)  
+Open [**WebAssembly.sh**](https://webassembly.sh)
 
 First you need to fetch a wasm file you'd like to run:
 
@@ -51,7 +51,8 @@ $ wasm3 --stack-size 100000 /tmp/wasm3.wasm /tmp/test.wasm
 
 ## Tracing
 
-You can also get structured traces of arbitrary WASM file execution (and this requires no specific support from the runtime):
+You can also get structured traces of arbitrary WASM file execution (and this requires no specific support from the
+runtime):
 
 ```sh
 $ wasm3-strace --repl /tmp/fib32.wasm

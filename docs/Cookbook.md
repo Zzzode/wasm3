@@ -3,6 +3,7 @@
 ### Rust WASI app
 
 Create a new project:
+
 ```sh
 $ cargo new --bin hello
 $ cd hello
@@ -10,6 +11,7 @@ $ rustup target add wasm32-wasi
 ```
 
 Build and run:
+
 ```sh
 $ cargo build --release --target wasm32-wasi
 
@@ -20,6 +22,7 @@ Hello, world!
 ### AssemblyScript WASI app
 
 Create `hello.ts`:
+
 ```ts
 import "wasi"
 import {Console} from "as-wasi"
@@ -28,6 +31,7 @@ Console.log('Hello World!');
 ```
 
 Create `package.json`:
+
 ```json
 {
   "scripts": {
@@ -44,6 +48,7 @@ Create `package.json`:
 ```
 
 Build and run:
+
 ```sh
 $ npm install
 $ npm run build
@@ -55,6 +60,7 @@ Hello World!
 ### TinyGo WASI app
 
 Create `hello.go`:
+
 ```go
 package main
 
@@ -66,6 +72,7 @@ func main() {
 ```
 
 Build and run:
+
 ```sh
 $ tinygo build -o hello.wasm -target wasi -no-debug hello.go
 
@@ -73,16 +80,15 @@ $ wasm3 hello.wasm
 Hello, world!
 ```
 
-
 ### Go WASI app
 
 Go currently does not provide the WASI interface.  
 For reference see [this issue](https://github.com/golang/go/issues/31105).
 
-
 ### Zig WASI app
 
 Create `hello.zig`:
+
 ```zig
 const std = @import("std");
 
@@ -93,6 +99,7 @@ pub fn main() !void {
 ```
 
 Build and run:
+
 ```sh
 $ zig build-exe -O ReleaseSmall -target wasm32-wasi hello.zig
 
@@ -103,6 +110,7 @@ Hello, world!
 ### Zig C-code WASI app
 
 Create `hello.c`:
+
 ```c
 #include <stdio.h>
 
@@ -113,6 +121,7 @@ int main() {
 ```
 
 Build and run:
+
 ```sh
 $ zig build-exe -O ReleaseSmall -target wasm32-wasi hello.c -lc
 
@@ -123,6 +132,7 @@ Hello, world!
 ## Zig library
 
 Create `add.zig`:
+
 ```zig
 export fn add(a: i32, b: i32) i64 {
     return a + b;
@@ -130,6 +140,7 @@ export fn add(a: i32, b: i32) i64 {
 ```
 
 Build and run:
+
 ```sh
 $ zig build-lib add.zig -O ReleaseSmall -target wasm32-freestanding
 
@@ -143,6 +154,7 @@ Result: 3
 The easiest way to start is to use [Wasienv](https://github.com/wasienv/wasienv).
 
 Create `hello.cpp`:
+
 ```cpp
 #include <iostream>
 
@@ -153,6 +165,7 @@ int main() {
 ```
 
 Or `hello.c`:
+
 ```c
 #include <stdio.h>
 
@@ -163,6 +176,7 @@ int main() {
 ```
 
 Build and run:
+
 ```sh
 $ wasic++ -O3 hello.cpp -o hello.wasm
 $ wasicc -O3 hello.c -o hello.wasm
@@ -185,7 +199,8 @@ Useful `clang` options:
 
 - **-Wl,--max-memory=\<value\>** Maximum size of the linear memory, which must be a multiple of 65536
 
-- **-z stack-size=\<vlaue\>** The auxiliary stack size, which is an area of linear memory, and must be smaller than initial memory size.
+- **-z stack-size=\<vlaue\>** The auxiliary stack size, which is an area of linear memory, and must be smaller than
+  initial memory size.
 
 - **-Wl,--strip-all** Strip all symbols
 
@@ -198,6 +213,7 @@ Useful `clang` options:
 - **-pthread** Support POSIX threads in generated code
 
 Limitations:
+
 - `setjmp/longjmp` and `C++ exceptions` are not available
 - no support for `threads` and `atomics`
 - no support for `dynamic libraries`
@@ -205,11 +221,13 @@ Limitations:
 ### Grain WASI app
 
 Create `hello.gr`:
+
 ```
 print("Hello, world!")
 ```
 
 Build and run:
+
 ```sh
 $ grain compile hello.gr -o hello.wasm
 
@@ -220,6 +238,7 @@ Hello, world!
 ### WAT WASI app
 
 Create `hello.wat`:
+
 ```wat
 (module
     ;; wasi_snapshot_preview1!fd_write(file_descriptor, *iovs, iovs_len, nwritten) -> status_code
@@ -247,8 +266,8 @@ Create `hello.wat`:
 )
 ```
 
-
 Build and run:
+
 ```sh
 $ wat2wasm hello.wat -o hello.wasm
 
@@ -259,6 +278,7 @@ Hello, world!
 ### WAT library
 
 Create `swap.wat`:
+
 ```wat
 (module
   (func (export "swap") (param i32 i32) (result i32 i32)
@@ -269,6 +289,7 @@ Create `swap.wat`:
 ```
 
 Build and run:
+
 ```sh
 $ wat2wasm swap.wat -o swap.wasm
 
@@ -280,11 +301,13 @@ Result: 456:i32, 123:i32
 # Tracing
 
 Drag'n'drop any of the WASI apps to [`WebAssembly.sh`](https://webassembly.sh/) and run:
+
 ```sh
 $ wasm3-strace /tmp/hello.wasm
 ```
 
 The execution trace will be produced:
+
 ```js
 _start () {
   __wasilibc_init_preopen () {
@@ -294,6 +317,7 @@ _start () {
         } = 131072
         sbrk (i32: 65536) {
 ```
+
 <details>
   <summary>Click to expand!</summary>
 
@@ -436,6 +460,7 @@ Hello, world!
   }
 }
 ```
+
 </details>
 
 # Gas Metering

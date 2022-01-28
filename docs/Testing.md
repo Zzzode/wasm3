@@ -13,7 +13,8 @@ It will automatically download, extract, run the WebAssembly core test suite.
 
 ## Running WASI test
 
-Wasm3 comes with a set of benchmarks and test programs (prebuilt as `WASI` apps) including `CoreMark`, `C-Ray`, `Brotli`, `mandelbrot`, `smallpt` and `wasm3` itself.
+Wasm3 comes with a set of benchmarks and test programs (prebuilt as `WASI` apps) including `CoreMark`, `C-Ray`, `Brotli`
+, `mandelbrot`, `smallpt` and `wasm3` itself.
 
 This test will run all of them and verify the output:
 
@@ -54,6 +55,7 @@ ninja
 Read [more on libFuzzer](https://llvm.org/docs/LibFuzzer.html) and it's options.
 
 Note: to catch fuzzer errors in debugger, you need to define:
+
 ```sh
 export ASAN_OPTIONS=abort_on_error=1
 export UBSAN_OPTIONS=abort_on_error=1

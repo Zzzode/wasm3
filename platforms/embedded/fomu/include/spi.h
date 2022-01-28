@@ -4,48 +4,48 @@
 #include <stdint.h>
 
 enum spi_state {
-	SS_UNCONFIGURED = 0,
-	SS_SINGLE,
-	SS_DUAL_RX,
-	SS_DUAL_TX,
-	SS_QUAD_RX,
-	SS_QUAD_TX,
-	SS_HARDWARE,
+  SS_UNCONFIGURED = 0,
+  SS_SINGLE,
+  SS_DUAL_RX,
+  SS_DUAL_TX,
+  SS_QUAD_RX,
+  SS_QUAD_TX,
+  SS_HARDWARE,
 };
 
 enum spi_type {
-	ST_UNCONFIGURED,
-	ST_SINGLE,
-	ST_DUAL,
-	ST_QUAD,
-	ST_QPI,
+  ST_UNCONFIGURED,
+  ST_SINGLE,
+  ST_DUAL,
+  ST_QUAD,
+  ST_QPI,
 };
 
 enum spi_pin {
-	SP_MOSI,
-	SP_MISO,
-	SP_HOLD,
-	SP_WP,
-	SP_CS,
-	SP_CLK,
-	SP_D0,
-	SP_D1,
-	SP_D2,
-	SP_D3,
+  SP_MOSI,
+  SP_MISO,
+  SP_HOLD,
+  SP_WP,
+  SP_CS,
+  SP_CLK,
+  SP_D0,
+  SP_D1,
+  SP_D2,
+  SP_D3,
 };
 
 struct spi_id {
-	uint8_t manufacturer_id;	// Result from 0x90
-	uint8_t device_id;		// Result from 0x90
-	uint8_t _manufacturer_id;	// Result from 0x9f
-	uint8_t memory_type;		// Result from 0x9f
-	uint8_t memory_size;		// Result from 0x9f
-	uint8_t signature;		// Result from 0xab
-	uint8_t serial[4];		// Result from 0x4b
-	int bytes;			// -1 if unknown
-	const char *manufacturer;
-	const char *model;
-	const char *capacity;
+  uint8_t manufacturer_id;  // Result from 0x90
+  uint8_t device_id;    // Result from 0x90
+  uint8_t _manufacturer_id;  // Result from 0x9f
+  uint8_t memory_type;    // Result from 0x9f
+  uint8_t memory_size;    // Result from 0x9f
+  uint8_t signature;    // Result from 0xab
+  uint8_t serial[4];    // Result from 0x4b
+  int bytes;      // -1 if unknown
+  const char *manufacturer;
+  const char *model;
+  const char *capacity;
 };
 
 struct ff_spi;

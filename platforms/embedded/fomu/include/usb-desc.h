@@ -36,22 +36,22 @@
 #include <webusb-defs.h>
 
 struct usb_setup_request {
-    union {
-        struct {
-            uint8_t bmRequestType;
-            uint8_t bRequest;
-        };
-        uint16_t wRequestAndType;
+  union {
+    struct {
+      uint8_t bmRequestType;
+      uint8_t bRequest;
     };
-    uint16_t wValue;
-    uint16_t wIndex;
-    uint16_t wLength;
+    uint16_t wRequestAndType;
+  };
+  uint16_t wValue;
+  uint16_t wIndex;
+  uint16_t wLength;
 };
 
 struct usb_string_descriptor_struct {
-    uint8_t bLength;
-    uint8_t bDescriptorType;
-    uint16_t wString[];
+  uint8_t bLength;
+  uint8_t bDescriptorType;
+  uint16_t wString[];
 };
 
 #define NUM_USB_BUFFERS           8
@@ -69,9 +69,9 @@ struct usb_string_descriptor_struct {
 extern const uint8_t usb_microsoft_wcid[MSFT_WCID_LEN];
 
 typedef struct {
-    uint16_t  wValue;
-    uint16_t  length;
-    const uint8_t *addr;
+  uint16_t wValue;
+  uint16_t length;
+  const uint8_t *addr;
 } usb_descriptor_list_t;
 
 extern const usb_descriptor_list_t usb_descriptor_list[];

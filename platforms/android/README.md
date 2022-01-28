@@ -10,16 +10,19 @@ export PATH=$ANDROID_HOME/cmdline-tools/latest/bin:$ANDROID_HOME/platform-tools:
 ```
 
 Install NDK:
+
 ```sh
 sdkmanager --install ndk-bundle platform-tools
 ```
 
 Build:
+
 ```sh
 ./gradlew build
 ```
 
 Install on device:
+
 ```
 adb install -r ./app/build/outputs/apk/debug/app-debug.apk
 ```

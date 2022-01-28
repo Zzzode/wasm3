@@ -21,38 +21,32 @@
 
 #define BUFSIZE (sizeof(long) * 8 + 1)
 
-char *ltoa(long N, char *str, int base)
-{
-      register int i = 2;
-      long uarg;
-      char *tail, *head = str, buf[BUFSIZE];
+char *ltoa(long N, char *str, int base) {
+  register int i = 2;
+  long uarg;
+  char *tail, *head = str, buf[BUFSIZE];
 
-      if (36 < base || 2 > base)
-            base = 10;                    /* can only use 0-9, A-Z        */
-      tail = &buf[BUFSIZE - 1];           /* last character position      */
-      *tail-- = '\0';
+  if (36 < base || 2 > base)
+    base = 10;                    /* can only use 0-9, A-Z        */
+  tail = &buf[BUFSIZE - 1];           /* last character position      */
+  *tail-- = '\0';
 
-      if (10 == base && N < 0L)
-      {
-            *head++ = '-';
-            uarg    = -N;
-      }
-      else  uarg = N;
+  if (10 == base && N < 0L) {
+    *head++ = '-';
+    uarg = -N;
+  } else uarg = N;
 
-      if (uarg)
-      {
-            for (i = 1; uarg; ++i)
-            {
-                  register ldiv_t r;
+  if (uarg) {
+    for (i = 1; uarg; ++i) {
+      register ldiv_t r;
 
-                  r       = ldiv(uarg, base);
-                  *tail-- = (char)(r.rem + ((9L < r.rem) ?
-                                  ('A' - 10L) : '0'));
-                  uarg    = r.quot;
-            }
-      }
-      else  *tail-- = '0';
+      r = ldiv(uarg, base);
+      *tail-- = (char) (r.rem + ((9L < r.rem) ?
+                                 ('A' - 10L) : '0'));
+      uarg = r.quot;
+    }
+  } else *tail-- = '0';
 
-      memcpy(head, ++tail, i);
-      return str;
+  memcpy(head, ++tail, i);
+  return str;
 }

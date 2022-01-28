@@ -42,7 +42,7 @@ d_m3BeginExternC
 #   define d_m3ClearRegisters       d_m3BaseClearRegisters
 # endif
 
-typedef m3ret_t (vectorcall * IM3Operation) (d_m3OpSig);
+typedef m3ret_t (vectorcall *IM3Operation)(d_m3OpSig);
 
 #define d_m3RetSig                  static inline m3ret_t vectorcall
 #define d_m3Op(NAME)                M3_NO_UBSAN d_m3RetSig op_##NAME (d_m3OpSig)
@@ -53,9 +53,8 @@ typedef m3ret_t (vectorcall * IM3Operation) (d_m3OpSig);
 #define nextOpDirect()              return nextOpImpl()
 #define jumpOpDirect(PC)            return jumpOpImpl((pc_t)(PC))
 
-d_m3RetSig  RunCode  (d_m3OpSig)
-{
-    nextOpDirect();
+d_m3RetSig RunCode(d_m3OpSig) {
+  nextOpDirect();
 }
 
 d_m3EndExternC

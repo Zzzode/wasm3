@@ -26,7 +26,9 @@ dfu-util -e
 ```sh
 wishbone-tool -s gdb
 ```
+
 On second tab:
+
 ```sh
 riscv64-unknown-elf-gdb wasm3.elf -ex 'target remote localhost:1234'
 

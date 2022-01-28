@@ -86,8 +86,8 @@
 
 # ifndef d_m3EnableStrace
 #   define d_m3EnableStrace                     0       // 1 - trace exported function calls
-                                                        // 2 - trace all calls (structured) - requires DEBUG
-                                                        // 3 - all calls + loops + memory operations
+// 2 - trace all calls (structured) - requires DEBUG
+// 3 - all calls + loops + memory operations
 # endif
 
 

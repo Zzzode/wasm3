@@ -3,19 +3,19 @@
 ## Recommended devices (ideal for beginners)
 
 - ESP32-based
-  - **LilyGO TTGO T7 V1.4** │ [AliExpress](https://www.aliexpress.com/item/32977375539.html)
-  - **M5Stack Fire** │ [AliExpress](https://www.aliexpress.com/item/32847906756.html)
+    - **LilyGO TTGO T7 V1.4** │ [AliExpress](https://www.aliexpress.com/item/32977375539.html)
+    - **M5Stack Fire** │ [AliExpress](https://www.aliexpress.com/item/32847906756.html)
 - nRF52840-based
-  - **Adafruit CLUE** │ [Adafruit](https://www.adafruit.com/clue)
-  - **Arduino Nano 33 BLE (or BLE Sense)** │ [Arduino](https://store.arduino.cc/arduino-nano-33-ble)
-  - **Particle Argon** │ [Particle](https://store.particle.io/collections/bluetooth/products/argon)
-  - **Adafruit Feather nRF52840** | [Adafruit](https://www.adafruit.com/product/4062)
+    - **Adafruit CLUE** │ [Adafruit](https://www.adafruit.com/clue)
+    - **Arduino Nano 33 BLE (or BLE Sense)** │ [Arduino](https://store.arduino.cc/arduino-nano-33-ble)
+    - **Particle Argon** │ [Particle](https://store.particle.io/collections/bluetooth/products/argon)
+    - **Adafruit Feather nRF52840** | [Adafruit](https://www.adafruit.com/product/4062)
 - Other
-  - **Raspberry Pi Pico** | [Raspberry Pi](https://www.raspberrypi.org/products/raspberry-pi-pico)
-  - **Adafruit PyGamer/PyBadge/PyBadge LC** │ [Adafruit](https://www.adafruit.com/product/4242)
-  - **SparkFun Artemis** | [SparkFun](https://www.sparkfun.com/search/results?term=Artemis)
-  - **Teensy 4.0** │ [PJRC](https://www.pjrc.com/store/teensy40.html)
-  - **Wemos W600 PICO** │ [AliExpress](https://www.aliexpress.com/item/4000314757449.html)
+    - **Raspberry Pi Pico** | [Raspberry Pi](https://www.raspberrypi.org/products/raspberry-pi-pico)
+    - **Adafruit PyGamer/PyBadge/PyBadge LC** │ [Adafruit](https://www.adafruit.com/product/4242)
+    - **SparkFun Artemis** | [SparkFun](https://www.sparkfun.com/search/results?term=Artemis)
+    - **Teensy 4.0** │ [PJRC](https://www.pjrc.com/store/teensy40.html)
+    - **Wemos W600 PICO** │ [AliExpress](https://www.aliexpress.com/item/4000314757449.html)
 
 ## Compatibility table
 
@@ -41,7 +41,8 @@ Fomu (soft CPU)       | Lattice ICE40UP5K |      RV32I | 12MHz      |  2 MB | 12
 ## Limited support
 
 The following devices can run Wasm3, however they cannot afford to allocate even a single Linear Memory page (64KB).
-This means `memoryLimit` should be set to the actual amount of RAM available, and that in turn usually breaks the allocator of the hosted Wasm application (which still assumes the page is 64KB and performs OOB access).
+This means `memoryLimit` should be set to the actual amount of RAM available, and that in turn usually breaks the
+allocator of the hosted Wasm application (which still assumes the page is 64KB and performs OOB access).
 
 Device                        | Chipset   | Architecture | Clock     | Flash | RAM
 ---                           |:---:      | ---         |     -----:| ---   | ---
@@ -56,5 +57,7 @@ Nordic nRF51822               |           |  Cortex-M0 <sup>⚠️</sup>  | 16MH
 Wicked Device WildFire       | ATmega1284 |  8-bit AVR <sup>⚠️</sup>  | 20MHz     | 128KB | 16KB
 
 ### Legend:
- ⚠️ This architecture/compiler currently fails to perform TCO (Tail Call Optimization/Elimination), which leads to sub-optimal interpreter behaviour (intense native stack usage, lower performance).  
+
+⚠️ This architecture/compiler currently fails to perform TCO (Tail Call Optimization/Elimination), which leads to
+sub-optimal interpreter behaviour (intense native stack usage, lower performance).  
 There are plans to improve this in future 🦄.

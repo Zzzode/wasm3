@@ -10,8 +10,7 @@
 /// It also keeps track of the board model.
 __attribute__((section(".boot_token"))) extern struct toboot_runtime boot_token;
 
-enum bootloader_reason
-{
+enum bootloader_reason {
   NOT_ENTERING_BOOTLOADER = 0,
   BOOT_TOKEN_PRESENT = 1,
   BOOT_FAILED_TOO_MANY_TIMES = 2,
